@@ -27,6 +27,7 @@
     "bootstrap": "4.4.1",
     "connected-react-router": "6.6.1",
     "core-js": "3",
+    "cross-env": "^6.0.3",
     "express": "^4.17.1",
     "history": "4.10.1",
     "localstorage-polyfill": "^1.0.1",
