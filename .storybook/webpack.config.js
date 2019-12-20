@@ -20,17 +20,22 @@ const test = /\.(ts|tsx)$/;
 
 const reactApp = {
   test,
-  loader: require.resolve('babel-loader'),
-  options: {
-    presets: [['react-app', { flow: false, typescript: true }]],
-  },
+  loaders: [
+    {
+      loader: require.resolve('awesome-typescript-loader'),
+    }
+  ],
 };
 
 const storysource = {
   test,
-  loader: require.resolve('@storybook/addon-storysource/loader'),
+  loaders: [
+    {
+      loader: require.resolve('@storybook/source-loader'),
+      options: { parser: 'typescript' },
+    },
+  ],
   enforce: 'pre',
-  options: { parser: 'typescript' },
 };
 
 

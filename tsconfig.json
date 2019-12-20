@@ -3,7 +3,13 @@
     "./src/*"
   ],
   "compilerOptions": {
-    "lib": ["es5", "es6", "es7", "es2017", "dom"],
+    "lib": [
+      "es5",
+      "es6",
+      "es7",
+      "es2017",
+      "dom"
+    ],
     "jsx": "preserve",
     "target": "es5",
     "allowJs": true,
@@ -16,7 +22,10 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "rootDirs": ["src", "stories"],
+    "rootDirs": [
+      "src",
+      "stories"
+    ],
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
@@ -24,8 +33,10 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "downlevelIteration": true,
-    "baseUrl": "src",
     "noFallthroughCasesInSwitch": true,
     "noEmit": true
+  },
+  "awesomeTypescriptLoaderOptions": {
+    "ignoreDiagnostics": [7005]
   }
 }
