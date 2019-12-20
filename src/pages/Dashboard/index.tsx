@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import styles from './styles.module.scss';
 
 import { IUser, getUser } from '../../reducers/user';
 import { selectFullName } from '../../selectors/auth';
@@ -22,7 +23,7 @@ export default () => {
   }
   return (
     <Layout>
-      <h1>Dashboard </h1>
+      <h1 className={styles.Redbg}>Dashboard </h1>
       <p>{message}</p>
       <p>"{fullName}" from reselect</p>
       <pre>APP TREE: {JSON.stringify(tree, null, '\t')}</pre>
