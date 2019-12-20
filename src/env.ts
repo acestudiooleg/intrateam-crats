@@ -5,6 +5,7 @@ export const {
   REACT_APP_BASENAME,
   REACT_APP_LOGIN_URL,
   REACT_APP_LOGOUT_URL,
+  IS_SSR  
 } = evalObject<NodeJS.ProcessEnv>(process.env);
 
 

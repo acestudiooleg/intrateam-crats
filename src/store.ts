@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, createMemoryHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
@@ -8,8 +8,10 @@ import { Routes } from './constants';
 import createRootReducer from './reducers';
 import appSagas from './sagas';
 
-export const history = createBrowserHistory({
-  basename: process.env.REACT_APP_BASENAME || Routes.Dashboard,
+export const history = process.env.IS_SSR ? createMemoryHistory({ 
+    initialEntries: [process.env.REACT_APP_BASENAME || Routes.Dashboard]
+}) : createBrowserHistory({
+    basename: process.env.REACT_APP_BASENAME || Routes.Dashboard,
 });
 
 const sagaMiddleware = createSagaMiddleware();

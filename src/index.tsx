@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import App from './App';
@@ -9,9 +8,7 @@ import './App.scss';
 
 const render = (Application: any) =>
   ReactDOM.render(
-    <Provider store={store}>
-      <Application />
-    </Provider>,
+      <Application />,
     document.getElementById('root') as HTMLElement,
   );
 
