@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-create-reducer';
-import { AUTHORIZE, LOGIN, UNAUTHORIZE } from '../actions/auth';
 import { AnyAction } from 'redux';
+import { AUTHORIZE, LOGIN, UNAUTHORIZE } from '../actions/auth';
 
 export interface IAuthState {
   authorized: boolean;

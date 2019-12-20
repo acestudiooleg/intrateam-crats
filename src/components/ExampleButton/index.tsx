@@ -1,5 +1,5 @@
-import React, {ReactNode} from 'react';
-import {Button} from 'reactstrap';
+import React, { ReactNode } from 'react';
+import { Button } from 'reactstrap';
 
 interface IProps {
   onClick?: () => void;
@@ -7,4 +7,9 @@ interface IProps {
   color: string;
 }
 
-export default ({children, color, onClick}: IProps) => <Button onClick={onClick} color={color}>Hello {children}</Button>;
+export default ({ children, color, onClick }: IProps) => (
+  <Button onClick={onClick} color={color}>
+Hello
+    {children}
+  </Button>
+);

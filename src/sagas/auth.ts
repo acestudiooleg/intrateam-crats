@@ -1,6 +1,6 @@
 import { call, put, take } from 'redux-saga/effects';
-import authActions, { LOGIN, LOGOUT } from '../actions/auth';
 import { push } from 'connected-react-router';
+import authActions, { LOGIN, LOGOUT } from '../actions/auth';
 
 import { setItem, getItem, removeItem } from '../utils/localStorage';
 import userActions from '../actions/user';

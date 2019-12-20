@@ -1,6 +1,8 @@
 import { call } from 'redux-saga/effects';
 import { setItem, getItem, removeItem } from '../utils/localStorage';
-import auth, { verifyToken, authorize, logout, login } from './auth';
+import auth, {
+  verifyToken, authorize, logout, login,
+} from './auth';
 
 describe('Authorize when token exists', () => {
   const token = '123456';

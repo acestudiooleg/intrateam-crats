@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-create-reducer';
-import { SET_USER, DROP_USER } from '../actions/user';
 import { AnyAction } from 'redux';
+import { SET_USER, DROP_USER } from '../actions/user';
 
 export interface IUser {
   name?: string;

@@ -1,4 +1,5 @@
 import { createAction, createEmptyAction } from '../utils/actions';
+
 export const LOGIN = 'AUTH/LOGIN';
 export const AUTHORIZE = 'AUTH/AUTHORIZE';
 export const UNAUTHORIZE = 'AUTH/UNAUTHORIZE';

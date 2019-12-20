@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
-import Layout from '../../containers/Layout';
-
-import { login } from '../../actions/auth';
-
 import {
   Card,
   CardBody,
@@ -19,6 +15,9 @@ import {
   Col,
 } from 'reactstrap';
 
+import Layout from '../../containers/Layout';
+import { login } from '../../actions/auth';
+
 const Login = () => {
   setTimeout(() => {
     window.location.replace('https://google.com');
@@ -32,8 +31,7 @@ const Login = () => {
 
   const handleInput = (name: string) => ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, [name]: value });
+  }: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [name]: value });
 
   const submitForm = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();

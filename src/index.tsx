@@ -7,13 +7,12 @@ import App from './App';
 import store from './store';
 import './App.scss';
 
-const render = (Application: any) =>
-  ReactDOM.render(
-    <Provider store={store}>
-      <Application />
-    </Provider>,
-    document.getElementById('root') as HTMLElement,
-  );
+const render = (Application: any) => ReactDOM.render(
+  <Provider store={store}>
+    <Application />
+  </Provider>,
+  document.getElementById('root') as HTMLElement,
+);
 
 render(App);
 

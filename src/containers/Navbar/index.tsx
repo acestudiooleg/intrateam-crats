@@ -2,9 +2,6 @@ import * as React from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import authActions from '../../actions/auth';
-import { IAuthState, getAuth } from '../../reducers/auth';
-
 import {
   Navbar as NavbarBS,
   Collapse,
@@ -13,6 +10,9 @@ import {
   NavItem,
   Button,
 } from 'reactstrap';
+import authActions from '../../actions/auth';
+import { IAuthState, getAuth } from '../../reducers/auth';
+
 
 const Navbar = () => {
   const auth: IAuthState = useSelector(getAuth, shallowEqual);
@@ -24,7 +24,7 @@ const Navbar = () => {
       <Link className="navbar-brand" to="/">
         IntraTeam
       </Link>
-      <Collapse isOpen={true} navbar>
+      <Collapse isOpen navbar>
         <Nav className="mr-auto" navbar>
           <NavItem>
             <Link className="nav-link" to="/settings">
