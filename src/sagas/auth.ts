@@ -6,13 +6,6 @@ import { setItem, getItem, removeItem } from '../utils/localStorage';
 import userActions from '../actions/user';
 import { Routes } from '../constants';
 
-interface ILoginAction {
-  type: string;
-  payload: {
-    email: string;
-    password: string;
-  };
-}
 
 export const verifyToken = (token: string) => token === '2+2=4';
 
@@ -53,7 +46,7 @@ export function* logout() {
 }
 
 export function* login() {
-  for (;;) {
+  for (; ;) {
     const {
       payload: { email, password },
     } = yield take(LOGIN);

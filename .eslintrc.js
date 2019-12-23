@@ -1,3 +1,6 @@
 module.exports =  {
-    extends: ['airbnb-typescript']
+    extends: ['airbnb-typescript'],
+    rules: {
+      "import/no-named-as-default-member": 0
+    }
   };
