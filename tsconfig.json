@@ -1,6 +1,7 @@
 {
   "include": [
-    "./src/*"
+    "./src/*",
+    "index.d.ts"
   ],
   "compilerOptions": {
     "lib": [
@@ -37,6 +38,8 @@
     "noEmit": true
   },
   "awesomeTypescriptLoaderOptions": {
-    "ignoreDiagnostics": [7005]
+    "ignoreDiagnostics": [
+      7005
+    ]
   }
 }

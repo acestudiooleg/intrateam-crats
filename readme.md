@@ -34,6 +34,7 @@
 
 ## Instalation
 `npm install`
+copy file `.env.local.sample` -> `.env.local`
 
 ## Development
 `npm start`

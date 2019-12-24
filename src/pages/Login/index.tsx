@@ -7,9 +7,7 @@ import Layout from '../../containers/Layout';
 import { login } from '../../actions/auth';
 
 const Login = (): React.ReactElement => {
-  setTimeout(() => {
-    window.location.replace('https://google.com');
-  }, 3000);
+
   const dispatch = useDispatch();
 
   const [form, setForm] = React.useState({
