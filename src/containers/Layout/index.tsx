@@ -5,9 +5,11 @@ export interface ILayoutProps {
   children: React.ReactNode;
 }
 
-export default ({ children }: ILayoutProps) => (
+const Layout = ({ children }: ILayoutProps): React.ReactElement => (
   <div>
     <Navbar />
     {children}
   </div>
 );
+
+export default Layout;

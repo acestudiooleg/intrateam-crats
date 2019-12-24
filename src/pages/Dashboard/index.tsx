@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import styles from './styles.module.scss';
 
@@ -11,8 +11,8 @@ import * as envs from '../../env';
 
 console.log(envs);
 
-export default () => {
-  const tree = useSelector((state) => state);
+const Dashboard = (): React.ReactElement => {
+  const tree = useSelector(state => state);
   const user: IUser = useSelector(getUser, shallowEqual);
   const auth: IAuthState = useSelector(getAuth, shallowEqual);
   const fullName = useSelector(selectFullName, shallowEqual);
@@ -25,15 +25,10 @@ export default () => {
     <Layout>
       <h1 className={styles.Redbg}>Dashboard </h1>
       <p>{message}</p>
-      <p>
-"
-        {fullName}
-" from reselect
-      </p>
-      <pre>
-APP TREE:
-        {JSON.stringify(tree, null, '\t')}
-      </pre>
+      <p>{fullName} from reselect</p>
+      <pre>APP TREE:{JSON.stringify(tree, null, '\t')}</pre>
     </Layout>
   );
 };
+
+export default Dashboard;

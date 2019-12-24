@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import { Button } from 'reactstrap';
 
 interface IProps {
@@ -7,9 +7,11 @@ interface IProps {
   color: string;
 }
 
-export default ({ children, color, onClick }: IProps) => (
+const ExampleButton = ({ children, color, onClick }: IProps): ReactElement => (
   <Button onClick={onClick} color={color}>
-Hello
+    Hello
     {children}
   </Button>
 );
+
+export default ExampleButton;

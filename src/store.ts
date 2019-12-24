@@ -3,8 +3,8 @@ import { createBrowserHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
-import { Routes } from './constants';
 
+import { Routes } from './constants';
 import createRootReducer from './reducers';
 import appSagas from './sagas';
 
@@ -24,11 +24,7 @@ let composer: any = compose;
 
 composer = composeWithDevTools;
 
-const store = createStore(
-  createRootReducer(history),
-  undefined,
-  composer(applyMiddleware(...middlewares)),
-);
+const store = createStore(createRootReducer(history), undefined, composer(applyMiddleware(...middlewares)));
 
 sagaMiddleware.run(appSagas);
 

@@ -16,8 +16,11 @@ const options = {
   red: 'danger',
 };
 
-
 export const GreenButton = () => {
   const color = radios('Color', options, options.green);
-  return <Button onClick={action('Click To Button')} color={color}>Green Button</Button>;
+  return (
+    <Button onClick={action('Click To Button')} color={color}>
+      Green Button
+    </Button>
+  );
 };

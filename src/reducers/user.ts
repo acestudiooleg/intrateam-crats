@@ -8,11 +8,9 @@ export interface IUser {
   email?: string;
 }
 
+const initialState: IUser = {};
 
-const initialState: IUser = {
-};
-
-export const getUser = (state: {user: IUser}): IUser => state.user;
+export const getUser = (state: { user: IUser }): IUser => state.user;
 
 export default createReducer(initialState, {
   [SET_USER]: (state: IUser, { payload }: AnyAction) => payload,

@@ -5,16 +5,16 @@ import authActions, { LOGIN, LOGOUT } from '../actions/auth';
 import { setItem, getItem, removeItem } from '../utils/localStorage';
 import userActions from '../actions/user';
 import { Routes } from '../constants';
+import { IUser } from '../reducers/user';
 
+export const verifyToken = (token: string): boolean => token === '2+2=4';
 
-export const verifyToken = (token: string) => token === '2+2=4';
-
-const signIn = (email: string, password: string) => {
+const signIn = (email: string, password: string): string => {
   console.log({ email, password });
   return '2+2=4';
 };
 
-const getUserByToken = (token: string) => {
+const getUserByToken = (token: string): IUser => {
   console.log({ token });
   return {
     email: 'e@mail.com',
@@ -23,7 +23,8 @@ const getUserByToken = (token: string) => {
   };
 };
 
-export function* authorize(token: string) {
+export function* authorize(t: string) {
+  let token = t;
   if (token) {
     yield call(setItem, 'idToken', token);
   } else {
@@ -46,7 +47,7 @@ export function* logout() {
 }
 
 export function* login() {
-  for (; ;) {
+  for (;;) {
     const {
       payload: { email, password },
     } = yield take(LOGIN);

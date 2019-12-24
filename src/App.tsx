@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, ReactElement } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import ProtectedRoute from './containers/ProtectedRoute';
@@ -9,7 +9,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
 const Settings = lazy(() => import('./pages/Settings'));
 
-export default () => (
+const App = (): ReactElement => (
   <div className="App">
     <ConnectedRouter history={history}>
       <Suspense fallback={<div>Loading...</div>}>
@@ -22,3 +22,5 @@ export default () => (
     </ConnectedRouter>
   </div>
 );
+
+export default App;

@@ -19,7 +19,7 @@ export const initialState = {
   authPair: {},
 };
 
-export const getAuth = (state: {auth: IAuthState}) => state.auth;
+export const getAuth = (state: { auth: IAuthState }): IAuthState => state.auth;
 
 export default createReducer(initialState, {
   [LOGIN]: (state: IAuthState, { payload: authPair }: AnyAction) => ({

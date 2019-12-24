@@ -1,24 +1,12 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Container,
-  Row,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  Col,
-} from 'reactstrap';
+import { Card, CardBody, CardTitle, Container, Row, Form, FormGroup, Label, Input, Button, Col } from 'reactstrap';
 
 import Layout from '../../containers/Layout';
 import { login } from '../../actions/auth';
 
-const Login = () => {
+const Login = (): React.ReactElement => {
   setTimeout(() => {
     window.location.replace('https://google.com');
   }, 3000);
@@ -29,11 +17,10 @@ const Login = () => {
     password: '123',
   });
 
-  const handleInput = (name: string) => ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [name]: value });
+  const handleInput = (name: string) => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>): void =>
+    setForm({ ...form, [name]: value });
 
-  const submitForm = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const submitForm = (e: React.SyntheticEvent<HTMLFormElement>): void => {
     e.preventDefault();
     dispatch(login(form));
   };
@@ -50,12 +37,7 @@ const Login = () => {
                 <Form onSubmit={submitForm}>
                   <FormGroup>
                     <Label>Your email</Label>
-                    <Input
-                      onChange={handleInput('email')}
-                      value={form.email}
-                      placeholder="Email"
-                      type="email"
-                    />
+                    <Input onChange={handleInput('email')} value={form.email} placeholder="Email" type="email" />
                   </FormGroup>
                   <FormGroup>
                     <Label>Your password</Label>

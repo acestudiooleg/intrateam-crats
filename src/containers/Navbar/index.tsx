@@ -1,24 +1,18 @@
 import * as React from 'react';
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { AnyAction } from 'redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { Navbar as NavbarBS, Collapse, Form, Nav, NavItem, Button } from 'reactstrap';
 
-import {
-  Navbar as NavbarBS,
-  Collapse,
-  Form,
-  Nav,
-  NavItem,
-  Button,
-} from 'reactstrap';
 import authActions from '../../actions/auth';
 import { IAuthState, getAuth } from '../../reducers/auth';
 
-
-const Navbar = () => {
+const Navbar = (): React.ReactElement => {
   const auth: IAuthState = useSelector(getAuth, shallowEqual);
   const dispatch = useDispatch();
 
-  const logout = () => dispatch(authActions.logout());
+  const logout = (): AnyAction => dispatch(authActions.logout());
+
   return (
     <NavbarBS color="light" light expand="md">
       <Link className="navbar-brand" to="/">

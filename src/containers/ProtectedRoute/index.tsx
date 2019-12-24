@@ -6,7 +6,7 @@ import { Routes } from '../../constants';
 import { IAuthState, getAuth } from '../../reducers/auth';
 import authActions from '../../actions/auth';
 
-export default ({ children, ...rest }: RouteProps) => {
+const ProtectedRoute = ({ children, ...rest }: RouteProps): React.ReactElement => {
   const auth: IAuthState = useSelector(getAuth, shallowEqual);
   const dispatch = useDispatch();
 
@@ -16,3 +16,5 @@ export default ({ children, ...rest }: RouteProps) => {
   }
   return <Route {...rest}>{children}</Route>;
 };
+
+export default ProtectedRoute;

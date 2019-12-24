@@ -7,20 +7,20 @@ import App from './App';
 import store from './store';
 import './App.scss';
 
-const render = (Application: any) => ReactDOM.render(
-  <Provider store={store}>
-    <Application />
-  </Provider>,
-  document.getElementById('root') as HTMLElement,
-);
+const render = (Application: React.FC): void => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Application />
+    </Provider>,
+    document.getElementById('root') as HTMLElement,
+  );
+};
 
 render(App);
 
-// if (module.hot) {
-//   module.hot.accept('./App', () => {
-//     const NextApp = require('./App').default;
-//     render(NextApp);
-//   });
-// }
-
-// registerServiceWorker();
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App').default;
+    render(NextApp);
+  });
+}
