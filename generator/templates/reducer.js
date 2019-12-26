@@ -18,7 +18,7 @@ const initialState: I${Name} = {
   error: null,
 };
 
-export const getUser = (state: IState): I${Name} => getData(state.${naMe});
+export const getUser = (state: IState): I${Name} => state.${naMe};
 
 export default createReducer(initialState, {
   [FETCH_${NA_ME}]: () => ({ isLoading: true }),
