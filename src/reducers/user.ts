@@ -1,5 +1,4 @@
-import { createReducer } from 'redux-create-reducer';
-import { AnyAction } from 'redux';
+import createReducer from '../utils/redux-create-reducer';
 import { SET_USER, DROP_USER } from '../actions/user';
 
 export interface IUser {
@@ -13,6 +12,6 @@ const initialState: IUser = {};
 export const getUser = (state: { user: IUser }): IUser => state.user;
 
 export default createReducer(initialState, {
-  [SET_USER]: (state: IUser, { payload }: AnyAction) => payload,
+  [SET_USER]: payload => payload,
   [DROP_USER]: () => initialState,
 });

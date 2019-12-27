@@ -1,5 +1,4 @@
-import { createReducer } from 'redux-create-reducer';
-import { AnyAction } from 'redux';
+import createReducer from '../utils/redux-create-reducer';
 import { AUTHORIZE, LOGIN, UNAUTHORIZE } from '../actions/auth';
 
 export interface IAuthState {
@@ -22,13 +21,11 @@ export const initialState = {
 export const getAuth = (state: { auth: IAuthState }): IAuthState => state.auth;
 
 export default createReducer(initialState, {
-  [LOGIN]: (state: IAuthState, { payload: authPair }: AnyAction) => ({
-    ...state,
+  [LOGIN]: authPair => ({
     authPair,
   }),
-  [UNAUTHORIZE]: (state: IAuthState) => ({ ...state, authorized: false, authObject: {} }),
-  [AUTHORIZE]: (state: IAuthState, { payload: authObject }: AnyAction) => ({
-    ...state,
+  [UNAUTHORIZE]: () => ({ authorized: false, authObject: {} }),
+  [AUTHORIZE]: authObject => ({
     authObject,
     authorized: true,
   }),
