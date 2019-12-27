@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
-const async = require('async');
 const { camelCase, upperFirst, snakeCase } = require('lodash');
 
 const fileHandler = function(file, s, f) {
@@ -64,9 +63,23 @@ exports.createNaming = name => ({
   NA_ME: snakeCase(name).toUpperCase(),
 });
 
+/**
+ * Creates files with content
+ *
+ * @param {string} directory
+ * @param {[string[]]} files
+ * @param {boolean} force
+ */
 exports.createFiles = (directory, files, force) =>
   files.map(([name, content]) => createFile(directory + '/' + name, content, force));
 
+/**
+ * Create folder and files inside with content (!One level of nesting)
+ *
+ * @param {string} directory
+ * @param {[string[]]} files - names and contents for files
+ * @param {boolean} force - rewrite file if exists
+ */
 exports.createModule = (directory, files, force) => {
   exists(directory).then(ex => {
     if (!ex) {
@@ -78,7 +91,13 @@ exports.createModule = (directory, files, force) => {
   });
 };
 
-exports.injectDependencies = (filename, replacements = []) => {
+/**
+ *
+ * Inject dependencies to file by pattern
+ * @param {string} filename
+ * @param {[string[]]} replacements
+ */
+exports.injectDependencies = (filename, replacements) => {
   getFile(filename)
     .then(text => {
       let shouldRewrite = false;
@@ -91,7 +110,6 @@ exports.injectDependencies = (filename, replacements = []) => {
           shouldRewrite = true;
           const [before, after] = accumText.split(pattern);
           const x = [before, pattern, '\n', content, after].join('');
-          console.log(x);
           return x;
         }
         return accumText;
@@ -105,7 +123,16 @@ exports.injectDependencies = (filename, replacements = []) => {
       console.error(err);
     });
 };
-
+/**
+ *
+ *
+ * @param {{name: string, naMe: string, NA_ME: string, NaMe: string}} naming - object with different cases of names
+ * @param {(naming) => string} main - main file
+ * @param {(naming) => string} spec - test file
+ * @param {(naming) => string} story - story file
+ * @param {(naming) => string} style - styles file
+ * @returns
+ */
 exports.createFilesList = (naming, main, spec, story, style) => {
   const x = [
     [naming.name + '.ts', main(naming)],

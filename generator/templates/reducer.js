@@ -1,5 +1,4 @@
 module.exports = ({ name, NA_ME, Name, naMe }) => `import createReducer from '../utils/redux-create-reducer';
-import { getData } from '../utils/reducers';
 import { FETCH_${NA_ME}, FETCH_${NA_ME}_SUCCESS, FETCH_${NA_ME}_FAILURE } from '../actions/${name}';
 
 export interface I${Name} {
@@ -9,7 +8,7 @@ export interface I${Name} {
 }
 
 interface IState {
-  ${naMe}: I${Name}
+  ${naMe}: I${Name};
 }
 
 const initialState: I${Name} = {
@@ -22,7 +21,7 @@ export const getUser = (state: IState): I${Name} => state.${naMe};
 
 export default createReducer(initialState, {
   [FETCH_${NA_ME}]: () => ({ isLoading: true }),
-  [FETCH_${NA_ME}_SUCCESS]: (data) => ({ data, isLoading: false }),
-  [FETCH_${NA_ME}_FAILURE]: (error) => ({ error, isLoading: false }),
+  [FETCH_${NA_ME}_SUCCESS]: data => ({ data, isLoading: false }),
+  [FETCH_${NA_ME}_FAILURE]: error => ({ error, isLoading: false }),
 });
 `;
