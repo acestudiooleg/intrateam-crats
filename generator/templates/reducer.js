@@ -22,7 +22,7 @@ export const getUser = (state: IState): I${Name} => state.${naMe};
 
 export default createReducer(initialState, {
   [FETCH_${NA_ME}]: () => ({ isLoading: true }),
-  [FETCH_${NA_ME}_SUCCESS]: ({ payload: data }) => ({ data, isLoading: false }),
-  [FETCH_${NA_ME}_FAILURE]: ({ payload: error }) => ({ error, isLoading: false }),
+  [FETCH_${NA_ME}_SUCCESS]: (data) => ({ data, isLoading: false }),
+  [FETCH_${NA_ME}_FAILURE]: (error) => ({ error, isLoading: false }),
 });
 `;

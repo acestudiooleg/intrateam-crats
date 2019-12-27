@@ -21,12 +21,7 @@ export const initialState = {
 export const getAuth = (state: { auth: IAuthState }): IAuthState => state.auth;
 
 export default createReducer(initialState, {
-  [LOGIN]: authPair => ({
-    authPair,
-  }),
+  [LOGIN]: authPair => ({ authPair }),
   [UNAUTHORIZE]: () => ({ authorized: false, authObject: {} }),
-  [AUTHORIZE]: authObject => ({
-    authObject,
-    authorized: true,
-  }),
+  [AUTHORIZE]: authObject => ({ authObject, authorized: true }),
 });
