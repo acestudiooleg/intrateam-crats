@@ -9,7 +9,7 @@ const { createFiles, createNaming, injectDependencies, createFilesList } = requi
 module.exports = function(name, force, skip) {
   if (!name) {
     console.log('Please type reducer name');
-    console.log('node ./generator reducer {reducerName} {forceRewriteFiles} {skipActionsGenerator}');
+    console.log('node ./generator reducer {name} {forceRewriteFiles} {skipActionsGenerator}');
     return;
   }
 
@@ -22,7 +22,7 @@ module.exports = function(name, force, skip) {
     ['// inject usage', `    ${naming.naMe},`],
   ];
 
-  const files = createFilesList(naming, template, templateSpec);
+  const files = createFilesList(naming, false, template, { template, templateSpec });
 
   if (!skip) {
     action(name, force);

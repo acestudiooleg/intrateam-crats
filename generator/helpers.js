@@ -29,7 +29,7 @@ const createDirectory = directory =>
       if (err) {
         return f(err);
       }
-      return f();
+      return s();
     });
   });
 
@@ -56,12 +56,14 @@ const getFile = path =>
     });
   });
 
-exports.createNaming = name => ({
-  name,
-  naMe: camelCase(name),
-  Name: upperFirst(camelCase(name)),
-  NA_ME: snakeCase(name).toUpperCase(),
-});
+function createNaming(name) {
+  return {
+    name,
+    naMe: camelCase(name),
+    Name: upperFirst(camelCase(name)),
+    NA_ME: snakeCase(name).toUpperCase(),
+  };
+}
 
 /**
  * Creates files with content
@@ -70,8 +72,9 @@ exports.createNaming = name => ({
  * @param {[string[]]} files
  * @param {boolean} force
  */
-exports.createFiles = (directory, files, force) =>
-  files.map(([name, content]) => createFile(directory + '/' + name, content, force));
+function createFiles(directory, files, force) {
+  return files.map(([name, content]) => createFile(directory + '/' + name, content, force));
+}
 
 /**
  * Create folder and files inside with content (!One level of nesting)
@@ -80,16 +83,16 @@ exports.createFiles = (directory, files, force) =>
  * @param {[string[]]} files - names and contents for files
  * @param {boolean} force - rewrite file if exists
  */
-exports.createModule = (directory, files, force) => {
+function createModule(directory, files, force) {
   exists(directory).then(ex => {
-    if (!ex) {
-      return console.log('Error!! ' + directory + 'Directory exists');
+    if (ex) {
+      return console.log('Error!! ' + directory + ' - Directory exists');
     }
     return createDirectory(directory).then(() => {
       return createFiles(directory, files, force);
     });
   });
-};
+}
 
 /**
  *
@@ -97,7 +100,7 @@ exports.createModule = (directory, files, force) => {
  * @param {string} filename
  * @param {[string[]]} replacements
  */
-exports.injectDependencies = (filename, replacements) => {
+function injectDependencies(filename, replacements) {
   getFile(filename)
     .then(text => {
       let shouldRewrite = false;
@@ -122,7 +125,7 @@ exports.injectDependencies = (filename, replacements) => {
     .catch(err => {
       console.error(err);
     });
-};
+}
 /**
  *
  *
@@ -133,19 +136,27 @@ exports.injectDependencies = (filename, replacements) => {
  * @param {(naming) => string} style - styles file
  * @returns
  */
-exports.createFilesList = (naming, main, spec, story, style) => {
+function createFilesList(naming, isModule, templates) {
+  const mainFileName = isModule ? 'index.tsx' : naming.name + '.ts';
+  const specFileName = isModule ? 'test.spec.tsx' : naming.name + '.spec.ts';
   const x = [
-    [naming.name + '.ts', main(naming)],
-    [naming.name + '.spec.ts', spec(naming)],
+    [mainFileName, templates.template(naming)],
+    [specFileName, templates.templateSpec(naming)],
   ];
 
-  if (story) {
-    x.push(['story.ts', story(naming)]);
+  if (templates.templateStory) {
+    x.push(['story.tsx', templates.templateStory(naming)]);
   }
 
-  if (style) {
-    x.push(['style.module.scss', story(naming)]);
+  if (templates.templateStyles) {
+    x.push(['style.module.scss', templates.templateStyles(naming)]);
   }
 
   return x;
-};
+}
+
+exports.createNaming = createNaming;
+exports.createFiles = createFiles;
+exports.createModule = createModule;
+exports.injectDependencies = injectDependencies;
+exports.createFilesList = createFilesList;

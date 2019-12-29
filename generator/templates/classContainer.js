@@ -2,6 +2,7 @@ module.exports = ({ name, Name }) => `import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setCounter, plus, minus } from '../../actions/counter';
 import { getCounter } from '../../reducers/counter';
+import styles from './styles.module.scss';
 
 interface IProps {
   initialConter: number;
@@ -51,7 +52,7 @@ class ${Name} extends Component<IProps, IState> {
   }
   render() {
     return (
-      <div>
+      <div className={styles.element}>
         <h1>Hello component {this.state.counter} ${name}</h1>
         <button onClick={this.plus}>+</button>
         <button onClick={this.minus}>-</button>
@@ -64,5 +65,4 @@ class ${Name} extends Component<IProps, IState> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(${Name});
-
 `;

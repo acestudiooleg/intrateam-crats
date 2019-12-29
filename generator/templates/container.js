@@ -2,6 +2,7 @@ module.exports = ({ name, Name }) => `import React, { useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { setCounter, plus, minus } from '../../actions/counter';
 import { getCounter } from '../../reducers/counter';
+import styles from './styles.module.scss';
 
 interface IProps {
   counter: number;
@@ -20,7 +21,7 @@ const ${Name} = (props: IProps) => {
 
   const setCounterRedux = () => dispatch(setCounter(counterLocal));
   return (
-    <div>
+    <div className={styles.element}>
       <h1>
         Hello component {counterLocal} {counter} ${name}
       </h1>
@@ -34,5 +35,4 @@ const ${Name} = (props: IProps) => {
 };
 
 export default ${Name};
-
 `;

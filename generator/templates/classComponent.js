@@ -1,4 +1,5 @@
 module.exports = ({ name, Name }) => `import React, { Component } from 'react';
+import styles from './styles.module.scss';
 
 interface IProps {
   initialConter: number;
@@ -30,7 +31,7 @@ export default class ${Name} extends Component<IProps, IState> {
   }
   render() {
     return (
-      <div>
+      <div className={styles.element}>
         <h1>Hello component {this.state.counter} ${name}</h1>
         <button onClick={this.plus}>+</button>
         <button onClick={this.minus}>-</button>

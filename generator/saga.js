@@ -9,9 +9,7 @@ const { createFiles, createNaming, injectDependencies, createFilesList } = requi
 module.exports = function(name, force, skip) {
   if (!name) {
     console.log('Please type saga name');
-    console.log(
-      'node ./generator saga {sagaName} {forceRewriteFiles="force"} {skipActionsOrReducerGenerator="r,a|r|a"}',
-    );
+    console.log('node ./generator saga {name} {forceRewriteFiles="force"} {skipActionsOrReducerGenerator="r,a|r|a"}');
     return;
   }
 
@@ -29,7 +27,7 @@ module.exports = function(name, force, skip) {
     ['// inject usage', `    ${naming.naMe},`],
   ];
 
-  const files = createFilesList(naming, template, templateSpec);
+  const files = createFilesList(naming, false, { template, templateSpec });
 
   if (skip) {
     skip.split(',').forEach(type => {

@@ -65,7 +65,9 @@
     "build-storybook": "build-storybook -s public",
     "g:a": "node ./generator action",
     "g:r": "node ./generator reducer",
-    "g:s": "node ./generator saga"
+    "g:s": "node ./generator saga",
+    "g:com": "node ./generator component",
+    "g:con": "node ./generator container"
   },
   "browserslist": [
     ">0.2%",

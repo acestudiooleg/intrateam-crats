@@ -7,14 +7,14 @@ const { createFiles, createNaming, createFilesList } = require('./helpers');
 
 module.exports = function(name, force) {
   if (!name) {
-    console.log('Please type reducer name');
-    console.log('node ./generator actgion {actionName} {forceRewriteFiles}');
+    console.log('Please type action name');
+    console.log('node ./generator action {name} {forceRewriteFiles}');
     return;
   }
 
   const path = './src/actions';
   const naming = createNaming(name);
-  const files = createFilesList(naming, template, templateSpec);
+  const files = createFilesList(naming, false, { template, templateSpec });
 
   createFiles(path, files, force === 'force');
 };
