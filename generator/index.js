@@ -4,6 +4,7 @@ const reducer = require('./reducer');
 const saga = require('./saga');
 const component = require('./component');
 const container = require('./container');
+const page = require('./page');
 
 const type = process.argv[2];
 const name = process.argv[3];
@@ -17,6 +18,7 @@ const schema = {
   saga: () => saga(name, force, skip),
   component: () => component(name, force, componentType),
   container: () => container(name, force, componentType),
+  page: () => page(name, force, componentType),
 };
 
 if (type in schema) {

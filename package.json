@@ -66,6 +66,7 @@
     "g:a": "node ./generator action",
     "g:r": "node ./generator reducer",
     "g:s": "node ./generator saga",
+    "g:p": "node ./generator page",
     "g:com": "node ./generator component",
     "g:con": "node ./generator container"
   },
