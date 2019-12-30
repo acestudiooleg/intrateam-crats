@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const consoleParser = require('./consoleParser');
 const action = require('./action');
 const reducer = require('./reducer');
 const saga = require('./saga');
@@ -6,23 +7,23 @@ const component = require('./component');
 const container = require('./container');
 const page = require('./page');
 
-const type = process.argv[2];
-const name = process.argv[3];
-const force = process.argv[4];
-const skip = process.argv[5];
-const componentType = skip;
+const args = consoleParser();
 
-const schema = {
-  action: () => action(name, force),
-  reducer: () => reducer(name, force, skip),
-  saga: () => saga(name, force, skip),
-  component: () => component(name, force, componentType),
-  container: () => container(name, force, componentType),
-  page: () => page(name, force, componentType),
-};
+const { _, name, force, type, skip } = args;
 
-if (type in schema) {
-  schema[type]();
-} else {
-  console.log(`"${type}" - type does not exists in templates`);
+if (_ && name) {
+  const schema = {
+    action: () => action(name, force),
+    reducer: () => reducer(name, force, skip),
+    saga: () => saga(name, force, skip),
+    component: () => component(name, force, type),
+    container: () => container(name, force, type),
+    page: () => page(name, force, type),
+  };
+
+  if (_ in schema) {
+    schema[_]();
+  } else {
+    console.log(`"${_}" - type does not exists in templates`);
+  }
 }
