@@ -1,52 +1,26 @@
 import { call } from 'redux-saga/effects';
+import { saga, does, ends } from '../utils/saga';
 import { getItem } from '../utils/localStorage';
 import auth, { verifyToken, authorize, logout, login } from './auth';
 
-describe('Authorize when token exists', () => {
-  const token = '123456';
-  const gen = auth();
-  test('should get token from localstorage', () => {
-    const called = call(getItem, 'idToken');
-    const step = gen.next().value;
-    expect(step).toEqual(called);
-  });
+const token = '123';
+describe(
+  'Authorize when token exists',
+  saga(auth, [
+    does('should get token from localstorage', call(getItem, 'idToken')),
+    does('should verify token - in case when token is valid', call(verifyToken, token), token),
+    does('should call authorize flow', call(authorize, token), token),
+    does('should call logout flow', call(logout)),
+    does('should call logout flow', call(login)),
+    ends(),
+  ]),
+);
 
-  test('should verify token - in case when token is valid', () => {
-    const called = call(verifyToken, token);
-    const step = gen.next(token).value;
-    expect(step).toEqual(called);
-  });
-
-  test('should call authorize flow', () => {
-    const called = call(authorize, token);
-    const step = gen.next(token).value;
-    expect(step).toEqual(called);
-  });
-
-  test('should call logout flow', () => {
-    const called = call(logout);
-    const step = gen.next().value;
-    expect(step).toEqual(called);
-  });
-
-  test('should call login flow', () => {
-    const called = call(login);
-    const step = gen.next().value;
-    expect(step).toEqual(called);
-  });
-});
-
-describe('Authorize when token does not exists', () => {
-  const gen = auth();
-  test('should get token from localstorage', () => {
-    const called = call(getItem, 'idToken');
-    const step = gen.next().value;
-    expect(step).toEqual(called);
-  });
-
-  test('should call login flow', () => {
-    const called = call(login);
-    const step = gen.next().value;
-    expect(step).toEqual(called);
-  });
-});
+describe(
+  'Authorize when token does not exists',
+  saga(auth, [
+    does('should get token from localstorage', call(getItem, 'idToken')),
+    does('should call logout flow', call(login)),
+    ends(),
+  ]),
+);
