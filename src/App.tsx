@@ -9,7 +9,6 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
 const Settings = lazy(() => import('./pages/Settings'));
 // inject import
-const ColaCoca = lazy(() => import('./pages/ColaCoca'));
 
 const App = (): ReactElement => (
   <div className="App">
@@ -20,7 +19,6 @@ const App = (): ReactElement => (
           <Route path={Routes.Dashboard} exact component={Dashboard} />
           <Route path={Routes.Login} exact component={Login} />
           {/* inject usage */}
-          <Route path={Routes.ColaCoca} exact component={ColaCoca} />
         </Switch>
       </Suspense>
     </ConnectedRouter>
