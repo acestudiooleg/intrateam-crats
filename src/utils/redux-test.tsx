@@ -3,11 +3,14 @@ import { Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import _ from 'lodash';
 import { createStore } from 'redux';
-import * as enzyme from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { Routes } from '../constants';
 import { push, ConnectedRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import createRootReducer from '../reducers';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const _createStore = () => {
   const history = createBrowserHistory({ basename: process.env.REACT_APP_BASENAME || Routes.Dashboard });
@@ -25,13 +28,13 @@ const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) =>
   if (index !== -1) {
     return [arr.slice(0, index), arr.slice(index, arr.length)];
   }
-  return [arr];
+  return [arr, []];
 };
 
 export const { store, history } = _createStore();
 
-export const mount = (child, defaultStore = store) =>
-  enzyme.mount(
+export const mount = (child, defaultStore, history) =>
+  Enzyme.mount(
     <Provider store={defaultStore}>
       <ConnectedRouter history={history}>
         <Switch>{child}</Switch>
@@ -48,11 +51,12 @@ const transitionTo = path => {
 const getRouter = state => ({ ...state.router, transitionTo });
 
 export const reduxSetup = cmpn => (props = {}, actions = [], path = '/') => {
-  let holder;
-
+  const { store, history } = _createStore();
   const [actionsBefore, actionsAfter] = splitArrayBy(actions, _.isString);
 
   actionsBefore.forEach(action => store.dispatch(action));
+
+  let holder = mount(cmpn(props), store, history);
 
   actionsAfter.forEach(action => (action.type ? store.dispatch(action) : transitionTo(action)));
 
@@ -62,7 +66,7 @@ export const reduxSetup = cmpn => (props = {}, actions = [], path = '/') => {
 
   if (store.getState().router.location.pathname !== location.pathname) {
     // we have to rerender it after we apply new path
-    holder = mount(cmpn(props));
+    holder = mount(cmpn(props), store, history);
   }
 
   const state = store.getState();
@@ -79,10 +83,11 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
   let router;
   let holder;
   const storeToUse = newStore ? _createStore().store : store;
+  const historyToUse = newStore ? _createStore().history : history;
   /* eslint-disable no-return-assign */
   const render = () => {
-    holder = mount(cmpn(), storeToUse);
-    router = getRouter(storeToUse.getState().store);
+    holder = mount(cmpn(), storeToUse, historyToUse);
+    router = getRouter(storeToUse.getState());
   };
   /* eslint-disable babel/no-await-in-loop */
   for (const step of steps) {
