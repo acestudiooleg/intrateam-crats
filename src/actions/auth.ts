@@ -1,5 +1,14 @@
 import { createAction, createEmptyAction } from '../utils/actions';
 
+export interface IAuthObject {
+  token?: string;
+}
+
+export interface IAuthPair {
+  email?: string;
+  password?: string;
+}
+
 export const LOGIN = 'AUTH/LOGIN';
 export const AUTHORIZE = 'AUTH/AUTHORIZE';
 export const UNAUTHORIZE = 'AUTH/UNAUTHORIZE';
@@ -11,8 +20,8 @@ export const types = {
   LOGIN,
 };
 
-export const login = createAction(LOGIN);
-export const authorize = createAction(AUTHORIZE);
+export const login = createAction<IAuthPair>(LOGIN);
+export const authorize = createAction<IAuthObject>(AUTHORIZE);
 export const unauthorize = createEmptyAction(UNAUTHORIZE);
 export const logout = createEmptyAction(LOGOUT);
 

@@ -1,18 +1,13 @@
 import createReducer from '../utils/redux-create-reducer';
-import { AUTHORIZE, LOGIN, UNAUTHORIZE } from '../actions/auth';
+import { AUTHORIZE, LOGIN, UNAUTHORIZE, IAuthObject, IAuthPair } from '../actions/auth';
 
 export interface IAuthState {
   authorized: boolean;
-  authObject: {
-    token?: string;
-  };
-  authPair: {
-    email?: string;
-    password?: string;
-  };
+  authObject: IAuthObject;
+  authPair: IAuthPair;
 }
 
-export const initialState = {
+export const initialState: IAuthState = {
   authorized: false,
   authObject: {},
   authPair: {},

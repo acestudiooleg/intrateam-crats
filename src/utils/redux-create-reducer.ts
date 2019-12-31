@@ -2,12 +2,12 @@
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
-interface IAction {
+export interface IAction {
   type: string;
   payload: any;
 }
 
-type Reducer = (payload: any, state: any, type: string) => any;
+export type Reducer = (payload: any, state: any, type: string) => any;
 
 interface IHandlers {
   [key: string]: Reducer;
