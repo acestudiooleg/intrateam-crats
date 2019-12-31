@@ -10,8 +10,7 @@ import { IAuthState, getAuth } from '../../reducers/auth';
 const Navbar = (): React.ReactElement => {
   const auth: IAuthState = useSelector(getAuth, shallowEqual);
   const dispatch = useDispatch();
-
-  const logout = (): AnyAction => dispatch(authActions.logout());
+  const logout = (): AnyAction => dispatch(authActions.unauthorize());
 
   return (
     <NavbarBS color="light" light expand="md">
@@ -34,7 +33,6 @@ const Navbar = (): React.ReactElement => {
           </Button>
         ) : (
           <Link className="btn btn-primary" to="/login">
-            {' '}
             Login
           </Link>
         )}

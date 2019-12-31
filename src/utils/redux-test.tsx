@@ -31,6 +31,8 @@ const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) =>
   return [arr, []];
 };
 
+export const watchState = (path?: string) => ({ state }) => console.log(path ? _.get(state, path) : state);
+
 export const { store, history } = _createStore();
 
 export const mount = (child, defaultStore, history) =>
@@ -89,11 +91,12 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
     holder = mount(cmpn(), storeToUse, historyToUse);
     router = getRouter(storeToUse.getState());
   };
+
   /* eslint-disable babel/no-await-in-loop */
   for (const step of steps) {
     switch (typeof step) {
       case 'function':
-        if (!step.immediately) {
+        if (!step.rerender) {
           render();
         }
         await step({
@@ -107,9 +110,6 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
         storeToUse.dispatch(step);
         break;
       case 'string':
-        if (!router) {
-          render();
-        }
         transitionTo(step);
         break;
       default:
@@ -117,7 +117,7 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
   }
 };
 
-reduxTestSequence.immediately = fn => {
-  fn.immediately = true;
+reduxTestSequence.rerender = fn => {
+  fn.rerender = true;
   return fn;
 };
