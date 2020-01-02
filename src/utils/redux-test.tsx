@@ -18,7 +18,7 @@ const _createStore = () => {
   return { history, store };
 };
 
-const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) => {
+export const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) => {
   let index = -1;
   arr.forEach((el, i) => {
     if (predicate(el, i)) {
@@ -31,7 +31,7 @@ const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) =>
   return [arr, []];
 };
 
-export const watchState = (path?: string) => ({ state }) => console.log(path ? _.get(state, path) : state);
+export const watchState = (path?: string, log = console.log) => ({ state }) => log(path ? _.get(state, path) : state);
 
 export const { store, history } = _createStore();
 
