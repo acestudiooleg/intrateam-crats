@@ -1,4 +1,4 @@
-import { call, put, take } from 'redux-saga/effects';
+import { call, put, take, select } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import authActions, { LOGIN, LOGOUT } from '../actions/auth';
 
@@ -6,15 +6,16 @@ import { setItem, getItem, removeItem } from '../utils/localStorage';
 import userActions from '../actions/user';
 import { Routes } from '../constants';
 import { IUser } from '../reducers/user';
+import { getAuth } from '../reducers/auth';
 
 export const verifyToken = (token: string): boolean => token === '2+2=4';
 
-const signIn = (email: string, password: string): string => {
+export const signIn = (email: string, password: string): string => {
   console.log({ email, password });
   return '2+2=4';
 };
 
-const getUserByToken = (token: string): IUser => {
+export const getUserByToken = (token: string): IUser => {
   console.log({ token });
   return {
     email: 'e@mail.com',
@@ -42,16 +43,17 @@ export function* unauthorize() {
 
 export function* logout() {
   yield take(LOGOUT);
-  yield unauthorize();
+  yield call(unauthorize);
   window.location.pathname = Routes.Login;
 }
 
 export function* login() {
   for (;;) {
-    const {
-      payload: { email, password },
-    } = yield take(LOGIN);
+    yield take(LOGIN);
     try {
+      const {
+        authPair: { email, password },
+      } = yield select(getAuth);
       yield put({ type: 'LOADING_START' });
       const idToken = yield call(signIn, email, password);
       yield call(authorize, idToken);
@@ -59,15 +61,15 @@ export function* login() {
       yield put(push(Routes.Dashboard));
       yield call(logout);
     } catch (err) {
-      console.log({ err });
+      yield call(console.log, err);
       yield put({ type: 'LOADING_STOP' });
     }
   }
 }
 
 export default function* auth() {
-  const idToken = yield call(getItem, 'idToken');
   try {
+    const idToken = yield call(getItem, 'idToken');
     if (idToken) {
       const isValid = yield call(verifyToken, idToken);
       if (isValid) {
@@ -78,7 +80,7 @@ export default function* auth() {
       }
     }
   } catch (err) {
-    console.log(err);
+    yield call(console.log, err);
   } finally {
     yield call(login);
   }

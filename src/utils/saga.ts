@@ -1,57 +1,58 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import traceTool from './saga-trace-tool';
-/**
- *
- * (*1*)
- * - value for method of generator - next(arg), throw(arg)
- * also it is result of assignment yield to variable for
- * next interation of generator
- *
- *  function* gen(){
- *    // TO ===>
- *    let x = yield 10;
- *    console.log(x) // x == 20
- *  }
- *  let i= gen();
- *  let x = i.next().value; // x == 10
- *
- *  //**MAGIC**
- *  let arg = x + 10;
- *  i.next( arg ) // FROM ===>
- *
- *
- * (*2*)
- *
- * @return {Function}
- *    @param {Object} gen - generator
- *    @param {Object} t - ava test object
- *    @param {Funcion} next
- *      - method of generator - next|throw
- */
-
-export const loggerHelper = (turnOn: boolean, fullMessage: string) => (step, obj) => {
-  if (!turnOn) {
-    return;
-  }
-  const key = Object.keys(obj)[0];
-  const message = JSON.stringify(obj[key], null, '\t');
-  const cutMessage = fullMessage ? message : (message || '').substr(0, 300) + '... <--CUT';
-  console.log(` Result of "${step}"`);
-  console.log('====================');
-  console.log(`   ${key}:`, cutMessage);
-  console.log('--------------------\n');
-};
 
 /**
  * Execute tests step-by-step
- *
- *    saga(sagaGenerator, [
- *      take('action'), call(http, '/google')
- *    ])
- *
  * @param  {Function} f saga generator function
- * @param  {Array} steps
- *  - every step has test like yuild in original generator
+ * @param  {Array} steps - every step has test like yuild in original generator
+ * @example 
+ * // saga
+  function* MySaga (value: number) {
+    const a = yield value + 3;
+    const b = yield a - 1;
+    const c = yield b * 10;
+    return 'Done with: ' + c;
+  }
+  const x = MySaga(5);
+  console.log(x.next()); // yield 5 + 3 - {value: 8, done: false}
+  console.log(x.next(5 + 3)); // yield 8 - 1 - {value: 6, done: false}
+  console.log(x.next(8 - 1)); // yield 7 * 10 - {value: 70, done: false}
+  console.log(x.next(7 * 10)); // return 7 * 10 - {value: "done with: 70", done: true}
+
+  // default test view
+  describe('test MySaga', () => {
+    const initValue = 5;
+    const gen = MySaga(initValue);
+    test('should calculate "8"', () => {
+      const step = gen.next();
+      expect(step.value).toBe(8);
+      expect(step.done).toBeFalsy();
+    });
+    test('should calculate "7"', () => {
+      const step = gen.next(8);
+      expect(step.value).toBe(7);
+      expect(step.done).toBeFalsy();
+    });
+    test('should calculate "70"', () => {
+      const step = gen.next(70);
+      expect(step.value).toBe(70);
+      expect(step.done).toBeFalsy();
+    });
+    test('should calculatea nd return "Done with: 70" and finish iteration', () => {
+      const step = gen.next(70);
+      expect(step.value).toBe('Done with: 70');
+      expect(step.done).toBeTruthy();
+    });
+  });
+
+  // with saga test helper
+  const initValue = 5;
+  describe('test MySaga', saga(() => MySaga(initValue), [
+    does('should calculate "8"', 8),
+    does('should calculate "7"', 7, 8),
+    does('should calculate "8"', 70, 7),
+    does('should return "Done with: 70"', 70, 'Done with: 70'),
+  ]));
  */
 export const saga = (f, steps, ...args) => () => {
   const maybeTrace = steps[0];
@@ -70,16 +71,35 @@ export const saga = (f, steps, ...args) => () => {
 
 /**
  * Pass argument to generator, useful if test end on some step and need finish
- * @param  {[type]} arg *1
+ * @param  {any} arg - argument as result of previous "yield"
+ * @example 
+ * // saga
+  function* MySaga () {
+    yield 2 + 2;
+  }
+
+  describe('test MySaga', saga(MySaga, [
+    does('should calculate "4"', 4),
+    passPrev(4),
+  ]));
  */
 export const passPrev = arg => (gen, next = 'next') => gen[next](arg);
 
 /**
- * Execute toEqual test between value from generator
- * and passed param
+ * Execute toEqual test between value from generator and passed param
  *
  * @param  {Function} step - yield step of generator
- * @param  {any} arg
+ * @param  {any} arg -  - argument as result of previous "yield"
+ * @example 
+ * // saga
+  function* MySaga () {
+    yield 2 + 2;
+  }
+
+  describe('test MySaga', saga(MySaga, [
+    does('should calculate "4"', 4),
+    ends(4),
+  ]));
  */
 export const does = (testDesc: string, step, arg?: any) => (gen, next = 'next', { c, traceObj }) =>
   test(testDesc, () => {
@@ -88,6 +108,10 @@ export const does = (testDesc: string, step, arg?: any) => (gen, next = 'next', 
     expect(actual).toEqual(step);
   });
 
+/**
+ * Check if iterations are done
+ * @param arg - argument as result of previous "yield"
+ */
 export const ends = (arg?: any) => (gen, next = 'next') =>
   test('End of generator', () => expect(gen[next](arg).done).toBeTruthy());
 
@@ -97,16 +121,50 @@ export const ends = (arg?: any) => (gen, next = 'next') =>
  * @param  {{}} item - part of redux store
  * @param  {{}}} state full redux store
  * @param  {any} arg
+ * @example 
+ * // saga
+  function* MySaga () {
+    const step = yield call(getStep);
+    const counter = yield select((state) => state.counter);
+    yield put({type: 'increase', payload: counter.value + step});
+  }
+
+  describe('test MySaga', saga(MySaga, [
+    does('should get step', call(getStep)),
+    selects('should select counter', {value: 4}, {counter: {value: 4}}, 5),
+    does('should dispatch 9', put({type: 'increase', payload: 9})),
+  ]));
  */
 export const selects = (testDesc, item, state, arg?: any) => (gen, next = 'next', { c, traceObj }) =>
   test(testDesc, () => {
     const step = gen[next](arg).value;
-    expect(step.SELECT.selector instanceof Function).toBeTruthy();
-    const result = step.SELECT.selector(state);
+    expect(step.payload.selector instanceof Function).toBeTruthy();
+    const result = step.payload.selector(state);
     traceObj.selects(result, item, c);
     expect(result).toEqual(item);
   });
 
+/**
+   * Helper to test error
+   * !! Important - before throw error should be called at least one yield inside TRY block
+   * @param stepFn
+   * @example 
+  // saga
+  function* MySaga () {
+    try {
+      const step = yield call(getStep); // <- important step inside TRY
+      const counter = yield select((state) => state.counter);
+      yield put({type: 'increase', payload: counter.value + step});
+    } catch(err) {
+      yield put({ type: 'error', payload: err });
+    }
+  }
+
+  describe('test MySaga', saga(MySaga, [
+    does('get step', call(getStep)), // <- important step
+    throws(does('should dispatch error', put({type: 'error', payload: 'Ooops' }), Ooops)),
+  ]));
+ */
 export const throws = stepFn => (gen, x, { c, traceObj }) => {
   traceObj.throws(c);
   stepFn(gen, 'throw', { c, traceObj });
