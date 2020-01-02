@@ -62,7 +62,7 @@ export default (generator, isActive) => {
           return;
       }
     },
-    does(step, actual, c) {
+    does(step, actual, c, log = console.log) {
       if (!this.isActive) {
         return;
       }
@@ -74,44 +74,32 @@ export default (generator, isActive) => {
       const nameAct = act && act.name;
       const argsAct = this.getArgsByName(nameAct, act.body, actual);
       if (c === 0) {
-        console.log('\n');
+        log('\n');
       }
-      console.log(
+      log(
         `----- ${c +
           1}: DOES -----\n\n --- src: ---\n ${nameExp}[${argsExp}]\n\n --- test: ---\n ${nameAct}[${argsAct}]`,
       );
     },
-    selects(exp, act, c) {
+    selects(exp, act, c, log = console.log) {
       if (!this.isActive) {
         return;
       }
       const e = JSON.stringify(exp || 'undefined', null, '  ').substr(0, 300);
       const a = JSON.stringify(act || 'undefined', null, '  ').substr(0, 300);
       if (c === 0) {
-        console.log('\n');
+        log('\n');
       }
-      console.log(`- ${c + 1}: SELECTS  - ${e}<>${a} `);
+      log(`- ${c + 1}: SELECTS  - ${e}<>${a} `);
     },
-    requests(exp, act, args, c) {
-      if (!this.isActive) {
-        return;
-      }
-      const a = (act && act.method) || act;
-      const e = (exp && exp.method) || exp;
-      if (c === 0) {
-        console.log('\n');
-      }
-      const ar = args ? JSON.stringify(args, null, '  ') : args;
-      console.log(`- ${c + 1}: REQUESTS - ${e}<>${a} | [${ar}]`);
-    },
-    throws(c) {
+    throws(c, log = console.log) {
       if (!this.isActive) {
         return;
       }
       if (c === 0) {
-        console.log('\n');
+        log('\n');
       }
-      console.log(`-> ${c + 1}: THROWS`);
+      log(`-> ${c + 1}: THROWS`);
     },
   };
 };
