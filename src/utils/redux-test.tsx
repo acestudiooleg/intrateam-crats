@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
