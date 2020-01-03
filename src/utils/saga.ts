@@ -1,5 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import traceTool from './saga-trace-tool';
+import traceTool, { ITrace } from './saga-trace-tool';
+import { Saga, SagaIterator } from 'redux-saga';
+import { Effect } from 'redux-saga/effects';
+
+interface ITraceHelper {
+  c: number;
+  traceObj: ITrace;
+}
+
+type Step = (iter: SagaIterator, next?: 'next' | 'throw', obj?: ITraceHelper) => void;
 
 /**
  * Execute tests step-by-step
@@ -54,7 +63,7 @@ import traceTool from './saga-trace-tool';
     does('should return "Done with: 70"', 70, 'Done with: 70'),
   ]));
  */
-export const saga = (f, steps, ...args) => () => {
+export const saga = (f: Saga, steps: Step[], ...args: any[]) => () => {
   const maybeTrace = steps[0];
   let isTrace = false;
   if (typeof maybeTrace === 'string' && maybeTrace === 'trace') {
@@ -63,9 +72,9 @@ export const saga = (f, steps, ...args) => () => {
   }
   const traceObj = traceTool(f, isTrace);
 
-  const gen = f(...args);
-  steps.forEach((step, i) => {
-    step(gen, undefined, { c: i, traceObj });
+  const iter: SagaIterator = f(...args);
+  steps.forEach((step: Step, i: number) => {
+    step(iter, undefined, { c: i, traceObj });
   });
 };
 
@@ -83,7 +92,7 @@ export const saga = (f, steps, ...args) => () => {
     passPrev(4),
   ]));
  */
-export const passPrev = arg => (gen, next = 'next') => gen[next](arg);
+export const passPrev = (arg): Step => (iter, next = 'next') => iter[next](arg);
 
 /**
  * Execute toEqual test between value from generator and passed param
@@ -101,9 +110,9 @@ export const passPrev = arg => (gen, next = 'next') => gen[next](arg);
     ends(4),
   ]));
  */
-export const does = (testDesc: string, step, arg?: any) => (gen, next = 'next', { c, traceObj }) =>
+export const does = (testDesc: string, step: Effect, arg?: any): Step => (iter, next = 'next', { c, traceObj }) =>
   test(testDesc, () => {
-    const actual = gen[next](arg).value;
+    const actual: Effect = iter[next](arg).value;
     traceObj.does(step, actual, c);
     expect(actual).toEqual(step);
   });
@@ -135,7 +144,11 @@ export const ends = (arg?: any) => (gen, next = 'next') =>
     does('should dispatch 9', put({type: 'increase', payload: 9})),
   ]));
  */
-export const selects = (testDesc, item, state, arg?: any) => (gen, next = 'next', { c, traceObj }) =>
+export const selects = (testDesc: string, item: object, state: object, arg?: any): Step => (
+  gen,
+  next = 'next',
+  { c, traceObj },
+) =>
   test(testDesc, () => {
     const step = gen[next](arg).value;
     expect(step.payload.selector instanceof Function).toBeTruthy();
@@ -165,7 +178,7 @@ export const selects = (testDesc, item, state, arg?: any) => (gen, next = 'next'
     throws(does('should dispatch error', put({type: 'error', payload: 'Ooops' }), Ooops)),
   ]));
  */
-export const throws = stepFn => (gen, x, { c, traceObj }) => {
+export const throws = (stepFn: Step): Step => (iter, next = 'throw', { c, traceObj }) => {
   traceObj.throws(c);
-  stepFn(gen, 'throw', { c, traceObj });
+  stepFn(iter, next, { c, traceObj });
 };

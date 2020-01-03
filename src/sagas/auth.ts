@@ -7,6 +7,7 @@ import userActions from '../actions/user';
 import { Routes } from '../constants';
 import { IUser } from '../reducers/user';
 import { getAuth } from '../reducers/auth';
+import { SagaIterator } from 'redux-saga';
 
 export const verifyToken = (token: string): boolean => token === '2+2=4';
 
@@ -24,7 +25,7 @@ export const getUserByToken = (token: string): IUser => {
   };
 };
 
-export function* authorize(t: string) {
+export function* authorize(t: string): SagaIterator {
   let token = t;
   if (token) {
     yield call(setItem, 'idToken', token);
@@ -47,7 +48,7 @@ export function* logout() {
   window.location.pathname = Routes.Login;
 }
 
-export function* login() {
+export function* login(): SagaIterator {
   for (;;) {
     yield take(LOGIN);
     try {
@@ -67,7 +68,7 @@ export function* login() {
   }
 }
 
-export default function* auth() {
+export default function* auth(): SagaIterator {
   try {
     const idToken = yield call(getItem, 'idToken');
     if (idToken) {

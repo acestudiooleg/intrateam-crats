@@ -1,3 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Effect, effectTypes } from 'redux-saga/effects';
+import { Saga } from 'redux-saga';
+
+type Log = (data: any) => void;
+
+interface IPayloadWithArgs {
+  args: any;
+}
+
+interface ISagaStepInfo {
+  name: any;
+  body: any;
+  args: any;
+}
+
+export interface ITrace {
+  isActive: boolean;
+  parseSaga: <T, P extends IPayloadWithArgs>(saga: Effect<T, P>) => ISagaStepInfo;
+  getArgsByName: (name: string, body: any) => any;
+  does: (step: Effect<string, any>, actual: Effect<string, any>, c: number, log?: Log) => void;
+  selects: (exp: object, act: object, c, log?: Log) => void;
+  throws: (c, log?: Log) => void;
+}
+
 /**
  * Helps watch all executed steps with params
  *
@@ -22,7 +47,7 @@
  *  also show name of current active test
  * @return {Object} hash of methods
  */
-export default (generator, isActive) => {
+export default (generator: Saga, isActive: boolean): ITrace => {
   const testName = typeof isActive === 'string' ? isActive : '';
   const body = String(generator);
   const arr = body.match(/function(.*?)\{/);
@@ -36,27 +61,24 @@ export default (generator, isActive) => {
       const sagaId = '@@redux-saga/IO';
       const sagaKeys = Object.keys(saga);
       const isSaga = sagaKeys.some(el => el === sagaId);
-      if (!isSaga) {
-        return false;
-      }
-      const sagaName = saga.type;
+      const sagaName = isSaga ? saga.type : 'unknown';
+      const sagaBody = isSaga ? saga.payload : null;
 
-      const sagaBody = saga.payload;
       return {
         name: sagaName,
         body: sagaBody,
-        args: sagaBody.args,
+        args: isSaga ? sagaBody.args : null,
       };
     },
     getArgsByName(name, body) {
       switch (name) {
-        case 'PUT':
+        case effectTypes.PUT:
           return body.action.type;
-        case 'TAKE':
+        case effectTypes.TAKE:
           return body.pattern;
-        case 'CALL':
+        case effectTypes.CALL:
           return JSON.stringify(body.args, null, ' ').substr(0, 300);
-        case 'RACE':
+        case effectTypes.RACE:
           return Object.keys(body);
         default:
           return;
@@ -70,9 +92,9 @@ export default (generator, isActive) => {
       const act = this.parseSaga(actual);
 
       const nameExp = exp && exp.name;
-      const argsExp = this.getArgsByName(nameExp, exp.body, step);
+      const argsExp = this.getArgsByName(nameExp, exp & exp.body, step);
       const nameAct = act && act.name;
-      const argsAct = this.getArgsByName(nameAct, act.body, actual);
+      const argsAct = this.getArgsByName(nameAct, act && act.body, actual);
       if (c === 0) {
         log('\n');
       }
