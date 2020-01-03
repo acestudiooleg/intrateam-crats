@@ -1,16 +1,40 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { IAction } from './redux-create-reducer';
 import _ from 'lodash';
-import { createStore } from 'redux';
-import Enzyme from 'enzyme';
+import { createStore, Store } from 'redux';
+import { configure, mount as mnt, ReactWrapper } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { Routes } from '../constants';
-import { push, ConnectedRouter } from 'connected-react-router';
+import { push, ConnectedRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
-import createRootReducer from '../reducers';
+import createRootReducer, { IReduxState } from '../reducers';
 
-Enzyme.configure({ adapter: new Adapter() });
+type ActionStep = IAction | string;
+
+type TransitionTo = (path: string) => void;
+
+interface ITestRouter extends RouterState {
+  transitionTo: TransitionTo;
+}
+
+interface StepObjArgs {
+  holder: ReactWrapper;
+  router: ITestRouter;
+  state: IReduxState;
+  store: Store;
+}
+
+type StepFn = (obj: StepObjArgs) => void;
+
+interface StepObjFn extends StepFn {
+  rerender: boolean;
+}
+
+type SeqStep = IAction | string | StepObjFn;
+
+configure({ adapter: new Adapter() });
 
 const _createStore = () => {
   const history = createBrowserHistory({ basename: process.env.REACT_APP_BASENAME || Routes.Dashboard });
@@ -18,7 +42,7 @@ const _createStore = () => {
   return { history, store };
 };
 
-export const splitArrayBy = (arr: any[], predicate: (el: any, i: number) => boolean) => {
+export const splitArrayBy = <T, _>(arr: T[], predicate: (el: T, i: number) => boolean): T[][] => {
   let index = -1;
   arr.forEach((el, i) => {
     if (predicate(el, i)) {
@@ -36,7 +60,7 @@ export const watchState = (path?: string, log = console.log) => ({ state }) => l
 export const { store, history } = _createStore();
 
 export const mount = (child, defaultStore, history) =>
-  Enzyme.mount(
+  mnt(
     <Provider store={defaultStore}>
       <ConnectedRouter history={history}>
         <Switch>{child}</Switch>
@@ -44,15 +68,15 @@ export const mount = (child, defaultStore, history) =>
     </Provider>,
   );
 
-const transitionTo = path => {
+const transitionTo: TransitionTo = path => {
   if (location.pathname !== path) {
     store.dispatch(push(path));
   }
 };
 
-const getRouter = state => ({ ...state.router, transitionTo });
+const getRouter = (state: IReduxState): ITestRouter => ({ ...state.router, transitionTo });
 
-export const reduxSetup = cmpn => (props = {}, actions = [], path = '/') => {
+export const reduxSetup = cmpn => (props = {}, actions: ActionStep[] = [], path = '/') => {
   const { store, history } = _createStore();
   const [actionsBefore, actionsAfter] = splitArrayBy(actions, _.isString);
 
@@ -76,7 +100,7 @@ export const reduxSetup = cmpn => (props = {}, actions = [], path = '/') => {
   return { holder, router, state, store };
 };
 
-export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async () => {
+export const reduxTestSequence = (cmpn, steps: SeqStep[] = [], newStore?: boolean) => async () => {
   if (!steps.some(_.isFunction)) {
     expect('').toBe(`You have to pass test functions to the list of steps when
         using reduxTestSetup`);
@@ -96,7 +120,7 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
   for (const step of steps) {
     switch (typeof step) {
       case 'function':
-        if (!step.rerender) {
+        if (!step.rerender as boolean) {
           render();
         }
         await step({
@@ -117,7 +141,7 @@ export const reduxTestSequence = (cmpn, steps = [], newStore?: boolean) => async
   }
 };
 
-reduxTestSequence.rerender = fn => {
+reduxTestSequence.rerender = (fn: StepObjFn) => {
   fn.rerender = true;
   return fn;
 };
