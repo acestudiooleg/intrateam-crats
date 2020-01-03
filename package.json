@@ -56,6 +56,7 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "prettier": "^1.19.1",
+    "react-snap": "^1.23.0",
     "typescript": "3.3.3",
     "typescript-eslint": "0.0.1-alpha.0",
     "yargs": "^15.0.2"
@@ -63,6 +64,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "react-snap",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "test": "react-scripts test --env=jsdom",
     "test:cov": "react-scripts test --env=jsdom --coverage",

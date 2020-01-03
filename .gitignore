@@ -2,5 +2,5 @@ node_modules/
 .env*
 .vscode
 .idea
-dist
+build
 coverage

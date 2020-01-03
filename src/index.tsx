@@ -7,16 +7,22 @@ import App from './App';
 import store from './store';
 import './App.scss';
 
+const rootElement = document.getElementById('root') as HTMLElement;
+
 const render = (Application: React.FC): void => {
   ReactDOM.render(
     <Provider store={store}>
       <Application />
     </Provider>,
-    document.getElementById('root') as HTMLElement,
+    rootElement,
   );
 };
 
-render(App);
+if (rootElement.hasChildNodes()) {
+  ReactDOM.hydrate(<App />, rootElement);
+} else {
+  render(App);
+}
 
 if (module.hot) {
   module.hot.accept('./App', () => {
