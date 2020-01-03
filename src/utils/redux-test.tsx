@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { IAction } from './redux-create-reducer';
 import _ from 'lodash';
 import { createStore, Store } from 'redux';
-import { configure, mount as mnt, ReactWrapper } from 'enzyme';
+import Enzyme, { mount as mnt, ReactWrapper } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { Routes } from '../constants';
 import { push, ConnectedRouter, RouterState } from 'connected-react-router';
@@ -40,7 +40,9 @@ interface StepObjFn extends StepFn {
 
 type SeqStep = IAction | string | StepObjFn;
 
-configure({ adapter: Adapter() });
+const Adap = Adapter as any;
+
+Enzyme.configure({ adapter: new Adap() });
 
 const _createStore = () => {
   const history = createBrowserHistory({ basename: process.env.REACT_APP_BASENAME || Routes.Dashboard });

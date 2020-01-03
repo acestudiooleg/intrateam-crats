@@ -11,13 +11,13 @@ interface IState {
   ${naMe}: I${Name};
 }
 
-const initialState: I${Name} = {
+export const initialState: I${Name} = {
   isLoading: false,
   data: null,
   error: null,
 };
 
-export const getUser = (state: IState): I${Name} => state.${naMe};
+export const get${Name} = (state: IState): I${Name} => state.${naMe};
 
 export default createReducer(initialState, {
   [FETCH_${NA_ME}]: () => ({ isLoading: true }),
