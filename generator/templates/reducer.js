@@ -1,9 +1,9 @@
-module.exports = ({ name, NA_ME, Name, naMe }) => `import createReducer from '../utils/redux-create-reducer';
-import { FETCH_${NA_ME}, FETCH_${NA_ME}_SUCCESS, FETCH_${NA_ME}_FAILURE } from '../actions/${name}';
+module.exports = ({ name, naMe, NA_ME, Name }) => `import createReducer from '../utils/redux-create-reducer';
+import { FETCH_${NA_ME}, FETCH_${NA_ME}_SUCCESS, FETCH_${NA_ME}_FAILURE, I${Name}Data } from '../actions/${name}';
 
 export interface I${Name} {
   isLoading?: boolean;
-  data?: any;
+  data: I${Name}Data | null;
   error?: any;
 }
 

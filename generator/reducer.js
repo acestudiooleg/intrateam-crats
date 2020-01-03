@@ -22,7 +22,7 @@ module.exports = function(name, force, skip) {
     ['// inject usage', `    ${naming.naMe},`],
   ];
 
-  const files = createFilesList(naming, false, template, { template, templateSpec });
+  const files = createFilesList(naming, false, { template, templateSpec });
 
   if (!skip) {
     action(name, force);

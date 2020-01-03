@@ -9,7 +9,12 @@ import Adapter from 'enzyme-adapter-react-16';
 import { Routes } from '../constants';
 import { push, ConnectedRouter, RouterState } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
-import createRootReducer, { IReduxState } from '../reducers';
+import createRootReducer from '../reducers';
+
+interface IReduxState {
+  [key: string]: any;
+  router: RouterState;
+}
 
 type ActionStep = IAction | string;
 
@@ -34,7 +39,7 @@ interface StepObjFn extends StepFn {
 
 type SeqStep = IAction | string | StepObjFn;
 
-configure({ adapter: new Adapter() });
+configure({ adapter: Adapter() });
 
 const _createStore = () => {
   const history = createBrowserHistory({ basename: process.env.REACT_APP_BASENAME || Routes.Dashboard });

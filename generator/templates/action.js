@@ -1,4 +1,11 @@
-module.exports = ({ NA_ME }) => `import { createAction, createEmptyAction, createErrorAction } from '../utils/actions';
+module.exports = ({
+  NA_ME,
+  Name,
+}) => `import { createAction, createEmptyAction, createErrorAction } from '../utils/actions';
+
+export interface I${Name}Data {
+  [key: string]: any;
+}
 
 export const FETCH_${NA_ME} = '${NA_ME}/FETCH';
 export const FETCH_${NA_ME}_SUCCESS = '${NA_ME}/FETCH_SUCCESS';
@@ -11,8 +18,8 @@ export const types = {
 };
 
 export const fetch = createEmptyAction(FETCH_${NA_ME});
-export const fetchSuccess = createAction(FETCH_${NA_ME}_SUCCESS);
-export const fetchFailure = createErrorAction(FETCH_${NA_ME}_FAILURE);
+export const fetchSuccess = createAction<I${Name}Data>(FETCH_${NA_ME}_SUCCESS);
+export const fetchFailure = createErrorAction<Error>(FETCH_${NA_ME}_FAILURE);
 
 export default {
   fetch,

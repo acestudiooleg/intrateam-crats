@@ -7,7 +7,7 @@ export const createEmptyAction = (type: string) => () => ({
   type,
   payload: {},
 });
-export const createErrorAction = (type: string) => (error: any) => ({
+export const createErrorAction = <E>(type: string) => (error: E) => ({
   type,
   error,
 });
